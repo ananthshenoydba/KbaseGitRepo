@@ -1,0 +1,134 @@
+============= ETRADS BUG ==============
+
+splex@lg2devsrv-db20:~/env$ more /opt/contexts/uat-etrads/splex/admin/UATETD02_splex_2165.env
+export SP_COP_TPORT=2165
+export SP_COP_UPORT=2165
+export SP_SYS_HOST_NAME=uat-etrads-sp1
+export SP_SYS_PRODDIR=/opt/splex/app/splex_9.1
+export SP_SYS_VARDIR=/opt/contexts/uat-etrads/splex/var_${SP_COP_TPORT}
+
+export ORACLE_SID=UATETD02
+export ORACLE_BASE=/opt/oracle/app/oracle/
+export ORACLE_HOME=`grep ${ORACLE_SID} /etc/oratab|cut -d: -f2`
+
+PATH=/opt/splex/scripts:$PATH_ORIGINAL:$ORACLE_HOME/bin
+
+cd $SP_SYS_PRODDIR/bin/
+
+# Oracle account: SPLEX${SP_COP_TPORT}
+export SPLEX_ORACLE_ACOUNT=SPLEX${SP_COP_TPORT}
+
+------------------------------
+
+splex@lg2devsrv-db20:~/env$ more UATSEF02_splex_2165.env
+export SP_COP_TPORT=2165
+export SP_COP_UPORT=2265             <========== THIS NEEDS TO BE DIFFERENT FROM THE SOURCE PORT ========> 
+export SP_SYS_HOST_NAME=uat-sef-sp1
+export SP_SYS_PRODDIR=/opt/splex/app/splex_9.1
+export SP_SYS_VARDIR=/opt/contexts/uat-sef/splex/var_${SP_COP_TPORT}
+
+export ORACLE_SID=UATSEF02
+export ORACLE_BASE=/opt/oracle/app/oracle/
+export ORACLE_HOME=`grep ${ORACLE_SID} /etc/oratab|cut -d: -f2`
+
+PATH=/opt/splex/scripts:$PATH_ORIGINAL:$ORACLE_HOME/bin
+
+cd $SP_SYS_PRODDIR/bin/
+
+# Oracle account: SPLEX${SP_COP_TPORT}
+export SPLEX_ORACLE_ACOUNT=SPLEX${SP_COP_TPORT}
+
+#./sp_cop -u${SP_COP_TPORT}_${ORACLE_SID} &
+
+================================= PARTITIONS COMMANDS AND CONFIG FILE SAMPLE ==============================
+
+add partition to TRDNDF set name = TRDNDF and condition = "descr = 'NDF'" and route = uat-etrads-sp1:uat-etrads-SEF*uat-sef-sp1@o.UATSEF02 and tablename = SEF_OWNER.ETD_TRADES_T
+add partition to TUNDLNDF set name = TUNDLNDF and condition = "class = 'NDF'" and route = uat-etrads-sp1:uat-etrads-SEF*uat-sef-sp1@o.UATSEF02 and tablename = SEF_OWNER.ETD_TRADE_UNDERLYING_T
+add partition to TRDAUDNDF set name = TRDAUDNDF and condition = "descr = 'NDF'" and route = uat-etrads-sp1:uat-etrads-SEF*uat-sef-sp1@o.UATSEF02 and tablename = SEF_OWNER.ETD_TRADE_AUDIT_T
+
+add partition to TRDAUDNDF set name = TRDAUDNDF and condition = "descr = 'NDF'" and route = l53devsrv-db21:uat-etrads-SEF*uat-sef-sp1@o.UATSEF04 and tablename = SEF_OWNER.ETD_TRADE_AUDIT_T
+
+sp_ctrl (uat-etrads-sp1:2165)> view config UATETD_to_UATSEF_config_20191210_04
+
+Datasource:o.UATETD02
+
+#source tables                target tables                             routing map
+
+TFS.BROKER_DESKS_T            SEF_OWNER.ETD_BROKER_DESKS_T            uat-etrads-sp1:uat-etrads-SEF*uat-sef-sp1@o.UATSEF02
+TFS.DATES_T                   SEF_OWNER.ETD_DATES_T                   uat-etrads-sp1:uat-etrads-SEF*uat-sef-sp1@o.UATSEF02
+TFS.EXPIRY_CUTS_T             SEF_OWNER.ETD_EXPIRY_CUTS_T             uat-etrads-sp1:uat-etrads-SEF*uat-sef-sp1@o.UATSEF02
+TFS.INTERESTS_AUDIT_T         SEF_OWNER.ETD_INTERESTS_AUDIT_T         uat-etrads-sp1:uat-etrads-SEF*uat-sef-sp1@o.UATSEF02
+TFS.INTERESTS_T               SEF_OWNER.ETD_INTERESTS_T               uat-etrads-sp1:uat-etrads-SEF*uat-sef-sp1@o.UATSEF02
+TFS.INTEREST_EXTENSIONS_HT    SEF_OWNER.ETD_INTEREST_EXTENSIONS_HT    uat-etrads-sp1:uat-etrads-SEF*uat-sef-sp1@o.UATSEF02
+TFS.INTEREST_EXTENSIONS_T     SEF_OWNER.ETD_INTEREST_EXTENSIONS_T     uat-etrads-sp1:uat-etrads-SEF*uat-sef-sp1@o.UATSEF02
+TFS.INT_FILTER_T              SEF_OWNER.ETD_INT_FILTER_T              uat-etrads-sp1:uat-etrads-SEF*uat-sef-sp1@o.UATSEF02
+TFS.LOCATIONS_HISTORY_T       SEF_OWNER.ETD_LOCATIONS_HISTORY_T       uat-etrads-sp1:uat-etrads-SEF*uat-sef-sp1@o.UATSEF02
+TFS.LOCATIONS_T               SEF_OWNER.ETD_LOCATIONS_T               uat-etrads-sp1:uat-etrads-SEF*uat-sef-sp1@o.UATSEF02
+TFS.ORGANISATIONS_T           SEF_OWNER.ETD_ORGANISATIONS_T           uat-etrads-sp1:uat-etrads-SEF*uat-sef-sp1@o.UATSEF02
+TFS.ORG_DESKS_T               SEF_OWNER.ETD_ORG_DESKS_T               uat-etrads-sp1:uat-etrads-SEF*uat-sef-sp1@o.UATSEF02
+TFS.PEOPLE_T                  SEF_OWNER.ETD_PEOPLE_T                  uat-etrads-sp1:uat-etrads-SEF*uat-sef-sp1@o.UATSEF02
+TFS.PRICES_HISTORY_T          SEF_OWNER.ETD_PRICES_HISTORY_T          uat-etrads-sp1:uat-etrads-SEF*uat-sef-sp1@o.UATSEF02
+TFS.PRICES_T                  SEF_OWNER.ETD_PRICES_T                  uat-etrads-sp1:uat-etrads-SEF*uat-sef-sp1@o.UATSEF02
+TFS.PRICE_DISCRIMINATORS_HT   SEF_OWNER.ETD_PRICE_DISCRIMINATORS_HT   uat-etrads-sp1:uat-etrads-SEF*uat-sef-sp1@o.UATSEF02
+TFS.PRICE_DISCRIMINATORS_T    SEF_OWNER.ETD_PRICE_DISCRIMINATORS_T    uat-etrads-sp1:uat-etrads-SEF*uat-sef-sp1@o.UATSEF02
+TFS.PRICES_EXTENSIONS_T       SEF_OWNER.ETD_PRICES_EXTENSIONS_T       uat-etrads-sp1:uat-etrads-SEF*uat-sef-sp1@o.UATSEF02
+TFS.PRICES_EXTENSIONS_HT      SEF_OWNER.ETD_PRICES_EXTENSIONS_HT      uat-etrads-sp1:uat-etrads-SEF*uat-sef-sp1@o.UATSEF02
+TFS.SESSION_DETAILS_HISTORY_T SEF_OWNER.ETD_SESSION_DETAILS_HISTORY_T uat-etrads-sp1:uat-etrads-SEF*uat-sef-sp1@o.UATSEF02
+TFS.TRADES_T                  SEF_OWNER.ETD_TRADES_T                  !TRDNDF
+!                                                                     uat-etrads-sp1:uat-etrads-SEF*uat-sef-sp1@o.UATSEF02
+TFS.TRADE_AUDIT_T             SEF_OWNER.ETD_TRADE_AUDIT_T             uat-etrads-sp1:uat-etrads-SEF*uat-sef-sp1@o.UATSEF02
+TFS.TRADE_BROKERS_T           SEF_OWNER.ETD_TRADE_BROKERS_T           uat-etrads-sp1:uat-etrads-SEF*uat-sef-sp1@o.UATSEF02
+TFS.TRADE_PARTIES_T           SEF_OWNER.ETD_TRADE_PARTIES_T           uat-etrads-sp1:uat-etrads-SEF*uat-sef-sp1@o.UATSEF02
+TFS.TRADE_UNDERLYING_T        SEF_OWNER.ETD_TRADE_UNDERLYING_T        !TUNDLNDF
+!                                                                     uat-etrads-sp1:uat-etrads-SEF*uat-sef-sp1@o.UATSEF02
+TFS.TRADING_ENTITIES_T        SEF_OWNER.ETD_TRADING_ENTITIES_T        uat-etrads-sp1:uat-etrads-SEF*uat-sef-sp1@o.UATSEF02
+TFS.UNDERLYING_T              SEF_OWNER.ETD_UNDERLYING_T              uat-etrads-sp1:uat-etrads-SEF*uat-sef-sp1@o.UATSEF02
+
+
+========= COMPARE REPAIR COMMANDS =========
+
+sp_ctrl (uat-etrads-sp1:2165)> copy config UATETD_to_UATSEF_config_20191210_04 to compare161219.cfg
+sp_ctrl (uat-etrads-sp1:2165)> compare using compare161219.cfg
+sp_ctrl (uat-etrads-sp1:2165)> repair using compare161219.cfg
+
+
+================== NETAPP ASM USAGE =======
+
+set param SP_OCT_OLOG_USE_OCI 1
+
+================= CAPTURE DETAILS =========
+
+show capture detail
+
+
+=================== ABORT ==================
+
+sp_ctrl (prd-trads-sp2:2138)> show
+
+Process    Source                               Target                 State                   PID
+---------- ------------------------------------ ---------------------- -------------------- ------
+Import     prd-trads-sp1                        prd-trads-sp2          Running                 728
+Post       o.PRDTRD11-prd-trads-sp1             o.PRDTRD32             Stopping               1055
+
+sp_ctrl (prd-trads-sp2:2138)> abort service post
+sp_ctrl (prd-trads-sp2:2138)> show
+
+Process    Source                               Target                 State                   PID
+---------- ------------------------------------ ---------------------- -------------------- ------
+Import     prd-trads-sp1                        prd-trads-sp2          Running                 728
+Post       o.PRDTRD11-prd-trads-sp1             o.PRDTRD32             Aborting               1055
+
+====================
+
+show sync -->  to show tables out of sync, shows results only on the target side.
+
+==========  COMPARE COMMANDS ==========
+
+compare TFS.PEOPLE_T to EQD.PEOPLE_T at lg2devsrv-db20:sup-eqd-AR*sup-ar-sp2@o.SUPAR06 --> can only be run on the source side.
+
+compare TFS.PEOPLE_T to SEF_OWNER.EN_PEOPLE_T at lg2devsrv-db20:sup-en-SEF*sup-sef-sp2@o.SUPSEF06
+
+compare TFS.PEOPLE_T  to MTL.PEOPLE_T at lg2devsrv-db20:sup-mtl-AR*sup-ar-sp2@o.SUPAR06
+
+compare TFS.TRADE_AUDIT_T to FX.TRADE_AUDIT_T at prd-fx-sp1:prd-fx-AR*prd-ar-sp1@o.PRDAR11 where "TRADE_DATE > to_date('01-JUN-20', 'DD-MON-YY')"
+

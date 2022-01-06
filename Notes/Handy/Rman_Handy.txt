@@ -1,0 +1,32 @@
+DELETE BACKUP OF archivelog UNTIL TIME='sysdate-5';
+
+RMAN> delete archivelog high sequence 650;
+
+list archivelogs from yesterday.
+
+RMAN> list archivelog time between 'sysdate -1' and 'sysdate'
+
+Delete archivelogs backed up 1 time to disk
+
+RMAN> delete archive log all backed up 1 times to disk;
+
+Delete backups older than 7 days
+
+RMAN> delete backup completed before 'sysdate-7';
+
+Check For Logical And Physical Block Corruption
+
+RMAN>list backup of database; 
+
+========
+Restoring Archives
+========
+
+catalog backuppiece '/opt/contexts/backup/oracle/rman/PRDEQD11/PRDEQD11_20211215_ka0gplk7_1_1';
+crosscheck backuppiece '/opt/contexts/backup/oracle/rman/PRDEQD11/PRDEQD11_20211215_ka0gplk7_1_1';
+
+RESTORE ARCHIVELOG FROM SEQUENCE 171424 until sequence 171492;
+
+Restore archivelog between to scn numbers
+
+RMAN> restore archivelog scn between 547484587 and 547662805;
