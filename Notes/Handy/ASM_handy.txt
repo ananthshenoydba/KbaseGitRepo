@@ -1,0 +1,38 @@
+------------------------------------------
+How to resize ASM disk / diskgroup on 3Par
+------------------------------------------
+
+As root:
+lvresize /dev/db02vg/UATAGY11DATA01 -L 35g
+35g is the new size (not how much you are adding, there is a separate option for that).
+
+
+As oragrid:
+
+cd sql
+sqlasm
+@GetASMdiskgroups.sql
+
+ALTER DISKGROUP UATAGY11_DATA01 RESIZE ALL;
+
+@GetASMdiskgroups.sql
+
+------------------
+NetApp
+------------------
+
+As Oracle
+dd if=/dev/zero of=/opt/contexts/prd-eqd-data1/PRDEQD02_DATA11 bs=4k count=26214400
+dd if=/dev/zero of=/opt/contexts/prd-eqd-data2/PRDEQD02_DATA12 bs=4k count=26214400
+chmod g+w /opt/contexts/prd-eqd-data1/PRDEQD02_DATA11
+chmod g+w /opt/contexts/prd-eqd-data2/PRDEQD02_DATA12
+
+As oragrid
+cd sql
+sqlasm
+@GetASMdiskgroups.sql
+alter diskgroup PRDEQD02_DATA01 add disk '/opt/contexts/prd-eqd-data1/PRDEQD02_DATA11','/opt/contexts/prd-eqd-data2/PRDEQD02_DATA12';
+alter diskgroup PRDEQD02_DATA01 rebalance power 6;
+select * from v$asm_operation;
+select name,total_mb, free_mb  from V$ASM_DISK where name like 'PRDEQD02_D%';
+
