@@ -1,0 +1,23 @@
+command to find connections for each instance running on the host.
+
+ps -ef | grep oracle | grep -v ora_ | grep "(LOCAL=NO)"  | grep -v grep | awk '{print $8}' | cut -c7- | sort | uniq -c 
+
+==========
+
+Running script with pause for 30 secs.
+
+while true; do ./test.sh; sleep 30; done
+
+==========
+
+(PRD)[oracle@ld8prdsrv-db02 /opt/contexts/prd-trads/oracle/admin/PRDTRD11/diag/rdbms/prdtrd11/PRDTRD11/trace]$ grep "[0-9][0-9][0-9][0-9][0-9]ms" -B 1 PRDTRD11_lgwr_16268.trc | grep "2022" | awk '{print $2}' | uniq -c
+      5 2022-01-02
+     39 2022-01-03
+      7 2022-01-04
+      1 2022-01-05
+     26 2022-01-06
+     54 2022-01-07
+     41 2022-01-08
+     56 2022-01-09
+     85 2022-01-10
+     19 2022-01-11
