@@ -1,0 +1,9 @@
+--- Finding SQL that has already Run and get an explain plan from the table -------
+
+select sql_id, sql_textplan_hash_value from gv$sql where sql_text like '%fin.ar_org_id, fin.month%' and sql_text not like 'explain%'
+
+select * from V$SQL_BIND_CAPTURE where sql_id='4fxy9rfyr8s5v'
+
+SELECT * FROM table(DBMS_XPLAN.DISPLAY_CURSOR('26fandusdnvg3',0));
+
+SELECT * FROM table(DBMS_XPLAN.DISPLAY_CURSOR('26fandusdnvg3',0));
