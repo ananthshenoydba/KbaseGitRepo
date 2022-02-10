@@ -1,0 +1,40 @@
+List are mutable []
+
+Lists are heterogenous
+
+-------------------
+
+Tuples are represented using () and are immutable.
+
+We can unpack any container in Python as long as we give a matching number of variables as the container
+
+example_tuple = (Dylan, 23, 187.4, True)
+
+name, age, height, single = example_tuple
+
+print(name)
+print(single)
+
+tuples may be immutable i.e we cannot change the order of elements, or add  or remove elements but the elements themselves are mutable if it is allowed example a list inside a tuple is mutable but the list itself cannot be moved, or deleted.
+
+----------
+
+Sets are similar to list but are unordered and represented using {} and are mutable.
+
+We cannot index or slice a set. 
+
+We cannot have a list inside a Set as its not hashable.
+
+We can however add and remove elements.
+
+Sets cannot have a duplicate value as they are hashed and 2 hashes cannot have the same value
+
+-----------
+
+Dict is represented using {}
+
+keys are hashed and hence it may not appear in the order it was entered. also the key needs to be elements which are hashable which means they must be immutable i.e a list cannot be a key but a tuple can be.
+
+
+
+
