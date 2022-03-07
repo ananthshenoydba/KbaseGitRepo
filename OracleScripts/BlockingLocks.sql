@@ -24,11 +24,16 @@ select
 
 --## Blocking Lock Advanced Query ##--
 
+set pages 5000;
+set lines 250;
+col blocker format a25;
+col blockee format a25;
+col isblockin format a15;
 select
   sblocker.username AS blocker
  ,blocker.sid
  ,sblocker.serial#
- ,'is blocking '
+ ,'is blocking ' as isblockin
  ,sblockee.username AS blockee
  ,blockee.sid
  ,sblockee.seconds_in_wait secondsWait
