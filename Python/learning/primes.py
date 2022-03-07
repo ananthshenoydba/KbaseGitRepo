@@ -44,6 +44,13 @@ def get_primes(a,b):
             primelist.append(i)
     return primelist
 
+from timer import Timer
+t = Timer()
+t.start()
+
+is_prime(2305843009213693951)
+
+t.stop()
 # mersennes = []
 # for i in (primelist):
 #     mersennes.append(mersenne_number(i))
@@ -70,3 +77,5 @@ for i in prime_list:
         is_mer.append(0)
 print(is_mer)
     
+#my_list=[3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61]
+#my_mer=[1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1]
