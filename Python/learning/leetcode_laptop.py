@@ -24,19 +24,26 @@ def getmedian (inlst1,inlst2):
 def ismatch (instr1, instr2):
     strtochk = instr1
     pattern = instr2
-    perpos = strtochk.find('.')
-    astpos = strtochk.find('*')
+    perpos = pattern.find('.')
+    astpos = pattern.find('*')
     print(perpos)
-    print(pattern[perpos])
-    print(strtochk[perpos])
-    pattern[perpos]=strtochk[perpos]
-    # if "." in pattern:
-    #     pattern[perpos]=strtochk[perpos]
-    #     if strtochk==pattern:
-    #         return(True)
-    #     else:
-    #         return(False)
-    #elif "*" in pattern:
+    print(astpos)
+    print(strtochk[0:perpos])
+    print(pattern[0:perpos]) 
+    print(strtochk[perpos+1:])
+    print(pattern[perpos+1:])
+    if perpos == -1 and astpos == -1:
+        if strtochk == pattern:
+            return True
+        else:
+            return False
+    elif perpos != -1 and astpos == -1:
+        if strtochk[0:perpos-1]==pattern[0:perpos-1] and strtochk[perpos+1:]==pattern[perpos+1:]:
+            return True
+        else:
+            return False
+
         
+   
     
-print(ismatch('ab','a.'))
+print(ismatch('abcd','.bcd'))

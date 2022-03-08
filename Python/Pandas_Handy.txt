@@ -1,0 +1,64 @@
+import pandas as pd
+
+df = pd.read_csv("data/colombia-real-estate-1.csv")
+df.head()
+
+If we were interested in understanding the dimensionality of the DataFrame, we use the df.shape method. The code looks like this:
+
+df2.shape
+
+If we were trying to get a general idea of what the DataFrame contained, we use the info method. The code looks like this:
+
+df2.info()
+
+we'll just take a look at the first five rows by using the head method. The code looks like this:
+
+df2.head()
+
+we'll just take a look at the first five rows by using the head method. The code looks like this:
+
+df2.head()
+
+we create a new column called "price_m2", provide the formula to populate it, and inspect the first five rows of the dataset to make sure the new column includes the new values:
+
+df3["price_m2"] = df3["price_usd"] / df["area_m2"]
+
+df3.head()
+
+Just like we can add columns, we can also take them away. To do this, we’ll use the drop method. If I wanted to drop the “department” column from colombia-real-estate-1, the code would look like this:
+
+df2 = df.drop("department", axis="columns")
+
+dropping columns
+
+df2 = df2.drop(4,axis="rows")
+df2.head
+
+Including rows with empty cells can radically skew the results of our analysis, so we often drop them from the dataset. We can do this with the dropna method. If we wanted to do this with df, the code would look like this:
+
+print("df shape before dropping rows", df.shape)
+
+df.dropna(inplace=True)
+
+Splitting Strings
+
+It might be useful to split strings into their constituent parts, and create new columns to contain them. To do this, we’ll use the .str.split method, and include the character we want to use as the place where the data splits apart. In the colombia-real-estate-3 dataset, we might be interested breaking the "lat-lon" column into a "lat" column and a "lon" column. We’ll split it at “,” with code that looks like this:
+
+df3[["lat", "lon"]] = df3["lat-lon"].str.split(",", expand=True)
+
+df3.head()
+
+To access a substring from a Series, use the .str attribute from the Series. Then, index each string in the Series by providing the start:stop:step. Keep in mind that the start position is inclusive and the stop position is exclusive
+
+
+Another change you might want to make is replacing the characters in a string. To do this, we’ll use the replace method again, being sure to specify which string should be replaced, and what new string should replace it. 
+
+df["property_type"] = df["property_type"].str.replace("house", "single_family")
+df.head()
+
+
+If, for example, a column containing only numbers had been mistaken for a column containing only strings, we’d need to change that through a process called recasting. we could recast the entire dataset as strings by using the astype method, like this:
+
+newdf = df.astype("str")
+
+
