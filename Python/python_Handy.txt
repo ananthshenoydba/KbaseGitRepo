@@ -36,5 +36,49 @@ Dict is represented using {}
 keys are hashed and hence it may not appear in the order it was entered. also the key needs to be elements which are hashable which means they must be immutable i.e a list cannot be a key but a tuple can be.
 
 
+===========
+
+In python everything is an object even classes are objects
+
+object is anything that can be stored as a variable.
+
+42 is an object of type class int
+
+class is a type of blueprint of how an object should behave.
+
+whenever you are creating a new class you need 2 methods atleast, these are also known as dunder (double under) methods
+
+class Rational(object):
+
+    def __init__(self, numerator, denominator):
+        self.numerator = numerator
+        self.denominator = denominator
+
+    def __repr__(self):
+        return '%d/%d' % (self.numerator, self.denominator)
 
 
+fraction = Rational(4, 3)
+print(fraction)
+
+1) __init__ --> this is to initialize an object of that class and also when you call that method of that class it is the first arguement
+
+example 
+
+mylist.append(3) when you do this you are calling a method append of a class list and passing it mylist (self) and 3 (value to be appended) . This will throw and error if you do it for a tuple as there is no append method in the tuple class
+
+2) __repr__ --> this is to represent the object of that class to the end user.
+
+
+You might have noticed that both of the methods took as a first argument the keyword self. The first argument to any method in a  class is the instance of the class upon which the method is being called. Think of a class like a blueprint from which possibly many objects are built. The self argument is the mechanism Python uses so that the method can know which instance of the class it is being called upon. When the method is actually called, we can call it in two ways. Lets say we create a class MyClass with method .do_it(self), if we instantiate an object from this class, we can call the method in two ways:
+
+class MyClass(object):
+    def __init__(self, num):
+        self.num = num
+        
+    def do_it(self):
+        print(self.num)
+        
+myclass = MyClass(2)
+myclass.do_it()
+MyClass.do_it(myclass)
