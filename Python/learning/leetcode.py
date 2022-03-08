@@ -39,4 +39,36 @@ def addlist(lst1, lst2):
     num3=num1+num2
     return(int_2_list_rev(num3))
     
-print(addlist([2,4,3,4], [7,5,6,6]))
+#print(addlist([2,4,3,4], [7,5,6,6]))
+
+a_string = "abccdesgertgbjagewrawrgzdgsjhtarnzffgh"
+def getlongestnonrepeat(instr):
+    longest_string = 0
+    resultset = []
+    a_string = instr
+    for i in range(0,len(a_string)):
+        for j in range(1,len(a_string)+1-i):
+            if len(set(a_string[i:i+j])) == len(a_string[i:i+j]):
+                resultset.append(a_string[i:i+j])
+    resultset=set(resultset)
+    longest_string = len(max(resultset, key=len))
+    return(longest_string)
+
+
+#print(getlongestnonrepeat("abccdeffgh"))
+
+def getlongestpalin(instr):
+    longest_palin = ''
+    resultset = []
+    palin=''
+    a_string = instr
+    for i in range(0,len(a_string)):
+        for j in range(1,len(a_string)+1-i):
+            palin=a_string[i:i+j]
+            if palin == palin [::-1]:
+                resultset.append(a_string[i:i+j])
+    resultset=set(resultset)
+    longest_palin = max(resultset, key=len)
+    return(longest_palin)
+
+print(getlongestpalin("jkexvzsqshsxyytjmmhauoyrbxlgvdovlhzivkeixnoboqlfemfzytbolixqzwkfvnpacemgpotjtqokrqtnwjpjdiidduxdprngvitnzgyjgreyjmijmfbwsowbxtqkfeasjnujnrzlxmlcmmbdbgryknraasfgusapjcootlklirtilujjbatpazeihmhaprdxoucjkynqxbggruleopvdrukicpuleumbrgofpsmwopvhdbkkfncnvqamttwyvezqzswmwyhsontvioaakowannmgwjwpehcbtlzmntbmbkkxsrtzvfeggkzisxqkzmwjtbfjjxndmsjpdgimpznzojwfivgjdymtffmwtvzzkmeclquqnzngazmcfvbqfyudpyxlbvbcgyyweaakchxggflbgjplcftssmkssfinffnifsskmsstfclpjgblfggxhckaaewyygcbvblxypduyfqbvfcmzagnznquqlcemkzzvtwmfftmydjgvifwjoznzpmigdpjsmdnxjjfbtjwmzkqxsizkggefvztrsxkkbmbtnmzltbchepwjwgmnnawokaaoivtnoshywmwszqzevywttmaqvncnfkkbdhvpowmspfogrbmuelupcikurdvpoelurggbxqnykjcuoxdrpahmhiezaptabjjulitrilkltoocjpasugfsaarnkyrgbdbmmclmxlzrnjunjsaefkqtxbwoswbfmjimjyergjygzntivgnrpdxuddiidjpjwntqrkoqtjtopgmecapnvfkwzqxilobtyzfmeflqobonxiekvizhlvodvglxbryouahmmjtyyxshsqszvxekj"))
