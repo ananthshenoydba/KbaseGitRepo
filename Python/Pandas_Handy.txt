@@ -40,6 +40,18 @@ print("df shape before dropping rows", df.shape)
 
 df.dropna(inplace=True)
 
+The code to subset just the numerical entries looks like this:
+
+mexico_city5_numbers = mexico_city5.select_dtypes(include="number")
+
+In order to use the data in a series for other types of analysis, it might be helpful to know how often each value occurs in the Series. To do that, we use the value_counts method to aggregate the data. Let's take a look at the number of properties associated with each department in the colombia-real-estate-1 dataset.
+
+df1 = pd.read_csv("data/colombia-real-estate-1.csv", usecols=["department"])
+
+df1["department"].value_counts()
+
+
+
 Splitting Strings
 
 It might be useful to split strings into their constituent parts, and create new columns to contain them. To do this, we’ll use the .str.split method, and include the character we want to use as the place where the data splits apart. In the colombia-real-estate-3 dataset, we might be interested breaking the "lat-lon" column into a "lat" column and a "lon" column. We’ll split it at “,” with code that looks like this:
@@ -62,3 +74,75 @@ If, for example, a column containing only numbers had been mistaken for a column
 newdf = df.astype("str")
 
 
+Another change you might want to make is to rename a Series in pandas. To do this, we’ll use the rename method, being sure to specify the mapping of old and new columns. For example, if we wanted to replace the column name property_type with the string type_property in the colombia-real-estate-1 dataset, the code would look like this:
+
+df.rename(columns={"property_type": "type_property"})
+
+You might be interested in the unique values in a Series using pandas. To do this, we’ll use the unique method. For example, if we wanted to identify the unique values in the column property_type in the colombia-real-estate-1 dataset, the code would look like this:
+
+df["property_type"].unique()
+
+
+getting a summary description of the dataset.
+
+mexico_city1.describe()
+
+Like most large datasets, this one has many missing values which are missing. The describe function will ignore missing values in each column. You can also remove rows and columns with missing values, and then get a summary of the data that's still there. We need to remove columns first, before removing the rows; the sequence of operations here is important. The code looks like this:
+
+mexico_city1 = mexico_city1.drop(["floor", "price_usd_per_m2", "expenses", "rooms"], axis=1)
+mexico_city1 = mexico_city1.dropna(axis=0)
+mexico_city1.head
+
+group by 
+
+df1 = pd.read_csv("data/colombia-real-estate-1.csv")
+dept_group = df1.groupby("department")
+
+Now that we have all the properties grouped by department, we might want to see the properties in just one of the departments. We can use the get_group method to do that. If we just wanted to see the properties in "Santander", for example, the code would look like this:
+
+dept_group1 = df1.groupby("department")
+
+dept_group1.get_group("Santander")
+
+We can also make groups based on more than one category by adding them to the groupby method. After resetting the df1 DataFrame, here's what the code looks like if we want to group properties both by department and by property_type.
+
+df1 = pd.read_csv("data/colombia-real-estate-1.csv")
+
+dept_group2 = df1.groupby(["department", "property_type"])
+
+it's possible to use groupby to calculate aggregations. For example, if we wanted to find the average property area in each department, we would use the .mean() method. This is what the code for that looks like:
+
+dept_group = df2.groupby("department")["area_m2"].mean()
+
+dept_group
+
+drop_cols = [
+    "lat-lon",
+    "price",
+    "currency",
+]
+
+keep_cols = ["operation", "property_type", "place_with_parent_names"]
+
+mexico_city3_subsetted = mexico_city3[keep_cols]
+
+mexico_city3_subsetted = mexico_city3.drop(columns=drop_cols)
+
+
+df1 = pd.read_csv("data/colombia-real-estate-1.csv")
+mask = df1["area_m2"] > 200
+mask.head()
+
+Quartiles divide a sequence of numbers into four equal parts. Grouping a dataset into quartiles helps us to find outliers, and provides the basis for the data in a boxplot. 
+
+Standard deviation describes the proportion of records above or below the mean of a given distribution. In a normal distribution, 68% of the values fall within one standard deviation of the mean, 95% of the values fall within two standard deviations from the mean, and 99.7% of the values fall within three standard deviations from the mean
+
+Correlations tell us about the relationship between two sets of data. When we calculate this relationship, the result is a correlation coefficient. Correlation coefficients can have any value between -1 and 1. Values above 0 indicate a positive relationship (as one variable goes up, the other does too), and values below 0 indicate a negative relationship (as one variable goes up, the other goes down). The closer the coefficient's value is to either 1 or -1, the stronger the relationship is; the closer the coefficient's value is to 0, the weaker the relationship is. Coefficients equal to 0 indicate that there is no relationship between the two values, and are accordingly quite rare.
+
+When examining numerical data in columns of a DataFrame, you might want to know how well one column can be approximated as a linear function of another column. In our mexico-city-real-estate-1 dataset, for example, we might suspect that there was some relationship between the "price_aprox_usd" and "surface_covered_in_m2" variables. For the sake of thoroughness, let's make a table that shows all the correlations in the dataset. the code looks like this:
+
+import pandas as pd
+columns = ["price_aprox_usd", "surface_covered_in_m2"]
+mexico_city1 = pd.read_csv("./data/mexico-city-real-estate-1.csv", usecols=columns)
+corr = mexico_city1.corr()
+corr.style.background_gradient(axis=None)
