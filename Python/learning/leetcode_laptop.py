@@ -52,5 +52,13 @@ def ismatch (instr1, instr2):
         else:
             return False
         
-        
+def reverse_words_order_and_swap_cases(sentence):
+    string = sentence.swapcase()
+    words = string.split()
+    words = list(reversed(words))
+    revstring = " ".join(words)
+    return revstring
+    
+print(reverse_words_order_and_swap_cases("AweSome is CoDinG"))
+
 #print(ismatch('abcdefg','.bcde*'))

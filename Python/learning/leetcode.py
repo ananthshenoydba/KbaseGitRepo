@@ -115,3 +115,6 @@ def ismatch (instr1, instr2):
             return True
         else:
             return False
+        
+"mississippi"
+"mis*is*ip*."

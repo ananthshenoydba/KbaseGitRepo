@@ -1,0 +1,10 @@
+The first important thing to know is that, in PostgreSQL, everything is a transaction. If you send a simple query to the server, it is already a transaction.
+
+Keep in mind that the now() function will return the transaction time. The SELECT statement will, therefore, always return two identical timestamps. If you want the real time, consider using clock_timestamp() instead of now().
+
+\connect test --> to connect to the db.
+
+If more than one statement has to be a part of the same transaction, the BEGIN statement must be used.
+The BEGIN statement will ensure that more than one command is packed into a transaction.
+
+What was new in PostgreSQL 12 was the concept of a chained transaction. 

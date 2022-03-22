@@ -21,3 +21,9 @@ while true; do ./test.sh; sleep 30; done
      56 2022-01-09
      85 2022-01-10
      19 2022-01-11
+
+===========
+
+Getting MD5 for a folder.
+
+find transforms -type f -exec md5sum {} \; | md5sum
