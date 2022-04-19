@@ -7,3 +7,24 @@ select * from V$SQL_BIND_CAPTURE where sql_id='4fxy9rfyr8s5v'
 SELECT * FROM table(DBMS_XPLAN.DISPLAY_CURSOR('26fandusdnvg3',0));
 
 SELECT * FROM table(DBMS_XPLAN.DISPLAY_CURSOR('26fandusdnvg3',0));
+
+---- LISTAGG EXAMPLE -----
+
+select index_name, listagg(column_name, ',') within group (order by column_name) as columns from dba_ind_columns a where a.index_owner='TFS' and a.table_name = 'PRICES_T'
+group by index_name
+
+---- Start and end of week ----
+
+select trunc(sysdate,'IW')-7 as BOW, trunc(sysdate,'IW')-3 as EOW from dual;
+
+---- RANK EXAMPLE -----
+
+select n.source_id, count(*) from mif_notifications_t n where n.prd_code = 'TRADS' and  n.entered < to_date('2021-11-19','yyyy-mm-dd') and n.entered > to_date('2021-01-01','yyyy-mm-dd')and exists (select 1 from trd_trades_t x where x.id = source_id and x.deleted = 'N' and x.trade_type like '%gottex%')group by n.source_id
+
+select a.mnot_id, a.source_id,a.status,a.entered from 
+(select n.mnot_id, n.source_id,n.status,n.entered,--max(n.entered) 
+	OVER(partition by source_id) AS entered_max
+	RANK() OVER(partition by source_id ORDER BY n.entered DESC) AS rank
+	from mif_notifications_t n where n.prd_code = 'TRADS' and  n.source_id in 	('2021010062','2021010074','2021010083','2021010004','2021010076')
+	and exists (select 1 from trd_trades_t x where x.id = source_id and x.deleted = 'N' and x.trade_type like '%gottex%')) where rank=1
+

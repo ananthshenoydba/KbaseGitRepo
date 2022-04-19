@@ -36,3 +36,23 @@ alter diskgroup PRDEQD02_DATA01 rebalance power 6;
 select * from v$asm_operation;
 select name,total_mb, free_mb  from V$ASM_DISK where name like 'PRDEQD02_D%';
 
+----------------------
+Issue when you run oracleasm as root (which you almost always do) on a new server, it might end up creating the disks in "/dev/oracleasm/disks" with root as the owner which the grid installer will not recognise as a candidate disk. In this case what has happened is oracleasm has not been configured. To do this you will need to run oracleasm configure -i as so.
+
+oracleasm configure -i
+Configuring the Oracle ASM library driver.
+
+This will configure the on-boot properties of the Oracle ASM library
+driver.  The following questions will determine whether the driver is
+loaded on boot and what permissions it will have.  The current values
+will be shown in brackets ('[]').  Hitting <ENTER> without typing an
+answer will keep that current value.  Ctrl-C will abort.
+
+Default user to own the driver interface []: oragrid
+Default group to own the driver interface []: asmadmin
+Start Oracle ASM library driver on boot (y/n) [y]: y
+Scan for Oracle ASM disks on boot (y/n) [y]: y
+Writing Oracle ASM library driver configuration: done
+
+-----------------------
+
