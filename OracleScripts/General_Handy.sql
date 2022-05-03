@@ -21,3 +21,29 @@ ALTER DATABASE ADD LOGFILE group 8 ('+PRDEQD11_REDO01', '+PRDEQD11_REDO02') SIZE
 SELECT a.GROUP#, a.THREAD#, a.SEQUENCE#, a.ARCHIVED, a.STATUS, b.MEMBER AS REDOLOG_FILE_NAME, (a.BYTES/1024/1024) AS SIZE_MB
 FROM v$log a JOIN v$logfile b ON a.Group#=b.Group# ORDER BY a.GROUP#;
 
+===================
+- SHOW JOB STATUS -
+===================
+
+set pages 50000;
+set lines 250;
+col what format a45;
+col status format a15;
+col schema_user format a10;
+col next_date format a20;
+col this_date format a20;
+
+SELECT   a.job,
+         DECODE(NVL(b.SID, '1'),
+                1, 'SCHEDULED',
+                'RUNNING') status,
+         a.schema_user,
+         a.this_date,
+         a.next_date,
+         a.broken,
+         a.failures,
+         a.what
+FROM     dba_jobs a,
+         dba_jobs_running b
+WHERE    a.job = b.job(+) and a.schema_user in ('TFS', 'TFSAR', 'SEF_OWNER')
+ORDER BY 2;

@@ -25,6 +25,7 @@ select a.mnot_id, a.source_id,a.status,a.entered from
 (select n.mnot_id, n.source_id,n.status,n.entered,--max(n.entered) 
 	OVER(partition by source_id) AS entered_max
 	RANK() OVER(partition by source_id ORDER BY n.entered DESC) AS rank
-	from mif_notifications_t n where n.prd_code = 'TRADS' and  n.source_id in 	('2021010062','2021010074','2021010083','2021010004','2021010076')
+	from mif_notifications_t n where n.prd_code = 'TRADS' and  n.source_id in ('2021010062','2021010074','2021010083','2021010004','2021010076')
 	and exists (select 1 from trd_trades_t x where x.id = source_id and x.deleted = 'N' and x.trade_type like '%gottex%')) where rank=1
 
+------ PIVOT EXAMPLE -----
