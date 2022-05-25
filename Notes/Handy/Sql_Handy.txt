@@ -28,4 +28,35 @@ select a.mnot_id, a.source_id,a.status,a.entered from
 	from mif_notifications_t n where n.prd_code = 'TRADS' and  n.source_id in ('2021010062','2021010074','2021010083','2021010004','2021010076')
 	and exists (select 1 from trd_trades_t x where x.id = source_id and x.deleted = 'N' and x.trade_type like '%gottex%')) where rank=1
 
------- PIVOT EXAMPLE -----
+------ PIVOT EXAMPLE ------
+
+select * from (
+select
+extract(day from start_time) as DOM
+,extract(hour from start_time) as HOD
+--,nvl(sum(extract(minute from end_time-start_time)*60+ trunc(extract(second from end_time-start_time))),0) as Seconds 
+--,count(*)
+,to_char(nvl(sum(extract(minute from end_time-start_time)*60+ trunc(extract(second from end_time-start_time))),0)) 
+    || ' Secs/' 
+    || count(*) 
+    || ' = '
+    || to_char(round(sum( extract(minute from end_time-start_time)*60 + trunc(extract(second from end_time-start_time)))/count(*),2))
+    || ' Secs' as avg_secs
+--, to_char(round(sum( extract(minute from end_time-start_time)*60 + trunc(extract(second from end_time-start_time)))/count(*),2)) as avg_secs
+from requests_log_t a where 
+method='RESEAU.STATUS.GET' and
+--method in ('RESEAU.STATUS.GET','RESEAU.STATUS.GET.DATA') and
+--nvl(a.start_time,a.end_time) > sysdate - 1
+trunc(start_time) > sysdate-10
+group by
+extract(day from start_time) 
+,extract(hour from start_time) 
+--(extract(hour from end_time-start_time)*60*60) + (extract(minute from end_time-start_time)*60)+ trunc(extract(second from end_time-start_time))
+--order by 1,2,3
+)
+PIVOT
+(min(avg_secs) for HOD in ( 0, 1, 2,3,4,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23))
+
+
+
+
