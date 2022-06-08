@@ -27,3 +27,14 @@ while true; do ./test.sh; sleep 30; done
 Getting MD5 for a folder.
 
 find transforms -type f -exec md5sum {} \; | md5sum
+
+===========
+
+Diff command example for folders
+
+diff -qr uat-fx/tfs/ sup-fx/tfs/ --exclude '*20*' --exclude .svn --exclude client
+
+-q for just listing the file and not the detailed differences.
+-r for recursive.
+
+===========

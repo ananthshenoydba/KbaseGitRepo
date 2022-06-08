@@ -139,3 +139,27 @@ WHERE thread# = inst_id
 AND first_time > sysdate -10
 GROUP BY TRUNC (first_time), inst_id, TO_CHAR (first_time, 'Dy')
 ORDER BY 1,2;
+
+========= RESTRICTING THE RMAN BACKUP SPEED =========
+
+-- this is in MBps so the n/w bandwidth it will be using is times 8 so in this example 200Mbps. Remember the Allocate command needs to be run from withing the run{} block. TARGET is the source, to <> is the destination in this example your are cloning PRDFX01 to PRDFX02
+
+rman target sys/sys@PRDFX01 auxiliary sys/sys@PRDFX02
+
+SPOOL LOG TO '/opt/contexts/prd-fx/oracle/admin/PRDFX02/build/DuplicateActiveDatabase_to_PRDFX02_00.out'
+
+run{
+ALLOCATE AUXILIARY CHANNEL 19C DEVICE TYPE DISK RATE=25M;
+ALLOCATE CHANNEL 19C_1 DEVICE TYPE DISK RATE=25M;
+DUPLICATE TARGET DATABASE TO PRDFX02  FROM ACTIVE DATABASE
+LOGFILE
+        GROUP 1 ('+PRDFX02_REDO01','+PRDFX02_REDO02') SIZE 400M,
+        GROUP 2 ('+PRDFX02_REDO01','+PRDFX02_REDO02') SIZE 400M,
+        GROUP 3 ('+PRDFX02_REDO01','+PRDFX02_REDO02') SIZE 400M,
+        GROUP 4 ('+PRDFX02_REDO01','+PRDFX02_REDO02') SIZE 400M,
+        GROUP 5 ('+PRDFX02_REDO01','+PRDFX02_REDO02') SIZE 400M,
+        GROUP 6 ('+PRDFX02_REDO01','+PRDFX02_REDO02') SIZE 400M,
+        GROUP 7 ('+PRDFX02_REDO01','+PRDFX02_REDO02') SIZE 400M,
+        GROUP 8 ('+PRDFX02_REDO01','+PRDFX02_REDO02') SIZE 400M;
+}
+exit
