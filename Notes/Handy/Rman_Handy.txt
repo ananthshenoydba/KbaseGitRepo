@@ -1,3 +1,39 @@
+===== RMAN NOTES ======
+
+If one of your database data files fails, the traditional solution is to restore the data file from your RMAN backup and then recover it. In summary, the steps are roughly as follows:
+
+    Take the tablespace offline (if not already).
+    Restore the data file from RMAN backup.
+    Apply the incremental backups.
+    Recover the data file by applying archived redo logs.
+    Bring the tablespace online.
+If you have image copies instead of RMAN backups its easier to recover because they are actual copies of Datafiles rather than RMAN backups
+backup as copy datafile 6 format='+DATA';
+sql 'alter database datafile 6 offline';
+switch datafile 6 to copy;
+recover datafile 6;
+sql 'alter database datafile 6 online';
+
+------
+
+You can decide that you want your backups to be retained in the fast recovery area for a specific number of days. After the specified number of days, RMAN will mark the backups as obsolete, making them eligible for deletion. By using a recovery window, you’re ensuring that you can recover your database to any point within the recovery window. For example, if your recovery window is configured to be seven days, you can recover the database to any day and time within the past week.
+
+A backup set is a logical structure that consists of a minimum of one backup piece, which is a physical, RMAN-specific format file that actually contains the backed-up data. A backup set can contain data from one or more data files, archived log files, or control files A backup set can’t contain a combination of data files and archived  log files. By default, a backup set contains just one backup piece. 
+The key difference between an image copy and a backup set is that RMAN can write blocks from many files into the same backup set (known as multiplexing) but can’t do so in the case of an image copy—an image copy is identical, byte by byte, to the original data file, control file, or archived redo log file. An RMAN image copy and a copy you make with an operating system copy command, such as dd (which makes image copies), are identical.
+
+The control file auto backups contain metadata about the previous backup. RMAN makes a control file auto backup after every backup command you issue from the command line and after every backup command in a run block that’s not followed by another backup command. Control file auto backups are significant because RMAN can restore the control file even if you lose both the control file and the recovery catalog.
+
+Only never-used data blocks are skipped to save on space. Even if a previously used data block is currently empty because the data was deleted at some point, RMAN still backs up the data block. The reason for this seemingly odd behavior is that RMAN was designed to back up data even when the database isn’t open when you can’t access the data dictionary to check whether a specific data block is on the free list (blocks get on the free list once all data has been deleted from them).
+
+A differential incremental backup is an incremental backup of all data blocks that changed subsequently to a level 0 or a level 1 backup. RMAN first looks for a level 1 backup and, in its absence, looks for a level 0 backup and backs up all changes since that level 0 backup.
+
+A cumulative incremental backup is an incremental backup of all data blocks that changed subsequently to the most recent level 0 incremental backup.
+
+The delete obsolete command relies only on the backup retention policy in force. It doesn’t consider the configured archived redo log deletion policy in effect to determine which archived redo logs are obsolete. The delete archivelog all command, on the other hand, relies entirely on the configured archived redo log deletion policy.
+
+Anytime you restore a control file from a backup (and use it for a recovery), you are required to perform media recovery on your entire database and then open it with the open resetlogs command. This is true even if you don’t restore any data files (because the control file’s SCN is no longer synchronized with the SCNs in the data files and online redo log files). You can determine whether your control file is a backup by querying the CONTROLFILE_TYPE column of the V$DATABASE view. 
+
+
 DELETE BACKUP OF archivelog UNTIL TIME='sysdate-5';
 
 RMAN> delete archivelog high sequence 650;
@@ -163,3 +199,15 @@ LOGFILE
         GROUP 8 ('+PRDFX02_REDO01','+PRDFX02_REDO02') SIZE 400M;
 }
 exit
+
+========= FRA USAGE =========
+
+select
+  file_type,
+  space_used*percent_space_used/100/1024/1024 used,
+  space_reclaimable*percent_space_reclaimable/100/1024/1024 reclaimable,
+  frau.number_of_files
+from v$recovery_file_dest rfd, v$flash_recovery_area_usage frau;
+
+==========
+
