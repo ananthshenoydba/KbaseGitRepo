@@ -132,3 +132,27 @@ compare TFS.PEOPLE_T  to MTL.PEOPLE_T at lg2devsrv-db20:sup-mtl-AR*sup-ar-sp2@o.
 
 compare TFS.TRADE_AUDIT_T to FX.TRADE_AUDIT_T at prd-fx-sp1:prd-fx-AR*prd-ar-sp1@o.PRDAR11 where "TRADE_DATE > to_date('01-JUN-20', 'DD-MON-YY')"
 
+
+======= ACTIVATING NEW CONFIG FILES =========
+
+sp_ctrl (uat-fx:2310)> copy config UATFX19_AR_SEF_config_20220615 to UATFX19_AR_SEF_config_20220623
+sp_ctrl (uat-fx:2310)> edit config UATFX19_AR_SEF_config_20220623
+sp_ctrl (uat-fx:2310)> verify config UATFX19_AR_SEF_config_20220623
+
+  Config UATFX19_AR_SEF_config_20220623 is valid
+  View detailed config in /opt/contexts/uat-fx/splex/var_2310/temp/UATFX19_AR_SEF_config_20220623
+
+sp_ctrl (uat-fx:2310)> activate config UATFX19_AR_SEF_config_20220623 nolock
+
+======== SKIPPING TABLE ON TARGET ===========
+
+Please get the objectid from source database and follow the below suggestions.
+
+sp_ctrl> set param SP_OPO_DISABLE_OBJECT_NUM <source's objectid> queue <queuename> 
+
+You may restart the post if its not taking immediate effect online.
+
+sp_ctrl> stop post queue <queuename>
+sp_ctrl> start post
+
+=============================================
