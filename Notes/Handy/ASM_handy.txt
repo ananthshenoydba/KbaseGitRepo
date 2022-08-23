@@ -17,6 +17,11 @@ ALTER DISKGROUP UATAGY11_DATA01 RESIZE ALL;
 
 @GetASMdiskgroups.sql
 
+
+Sometimes the existing disk groups will be 2TB in size and the above command will fail. Then you will need to add a new Disk using AMSCA. Initially you will have the space from the new disk addition but when it fills up and Unix team extend that disk the above command will fail. In such a situation you need to just extend the disk in question using the below command
+
+ALTER DISKGROUP PRDSEF11_DATA01 RESIZE DISK PRDSEF11_DATA03 SIZE 950G;
+
 ------------------
 NetApp
 ------------------

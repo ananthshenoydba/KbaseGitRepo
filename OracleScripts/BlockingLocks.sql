@@ -26,16 +26,17 @@ select
 
 set pages 5000;
 set lines 250;
-col blocker format a25;
-col blockee format a25;
+col blocker format a20;
+col blockee format a20;
 col isblockin format a15;
-select
+col blockerinfo format a15;
+col blockeeinfo format a15;
+select 
   sblocker.username AS blocker
- ,blocker.sid
- ,sblocker.serial#
+ ,blocker.sid ||','|| sblocker.serial#  as blockerinfo
  ,'is blocking ' as isblockin
  ,sblockee.username AS blockee
- ,blockee.sid
+ ,blockee.sid ||','|| sblockee.serial#  as blockeeinfo
  ,sblockee.seconds_in_wait secondsWait
 from v$lock    blocker
     ,v$session sblocker
