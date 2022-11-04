@@ -48,4 +48,5 @@ FROM     dba_jobs a,
 WHERE    a.job = b.job(+) and a.schema_user in ('TFS', 'TFSAR', 'SEF_OWNER')
 ORDER BY 2;
 
- repair tfs.interests_t sourcewhere "id in (select id from tfs.int_filter_t where updated > trunc(sysdate,'YYYY'))" targetwhere "id in (select id from sef_owner.fx_int_filter_t where updated > trunc(sysdate,'YYYY'))"
+
+repair tfs.interests_t sourcewhere "id in (select id from tfs.int_filter_t where updated > trunc(sysdate,'YYYY'))" targetwhere "id in (select id from sef_owner.fx_int_filter_t where updated > trunc(sysdate,'YYYY'))"

@@ -37,4 +37,6 @@ diff -qr uat-fx/tfs/ sup-fx/tfs/ --exclude '*20*' --exclude .svn --exclude clien
 -q for just listing the file and not the detailed differences.
 -r for recursive.
 
+diff --brief --recursive tfs tempsnco/sup-fx
+
 ===========

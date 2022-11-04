@@ -14,3 +14,26 @@ docker run -p 25432:5432 --name pgdevddb -d --volume utcdata:/var/lib/postgresql
 need to try
 
 docker run -p 5432:5432 -it -v /c/Users/me/Desktop/pg/data:/var/lib/postgresql/data postgres:latest -e POSTGRES_USER=user POSTGRES_PASSWORD=password
+
+=====================
+
+docker ps --> report running containers.
+docker ps -a --> report all containers running and exited previously
+docker stop <name>/<containerid> --> stop a running container.
+docker rm --> to remove the container that is stopped or exited.
+
+
+docker images --> which have been downloaded.
+
+docker rmi <image name> --> delete the downloaded image.
+
+docker pull image --> just to pull down the image and not run a container.
+
+docker run image --> just runs a command and exits immediately.
+
+docker exec <containername> <command>
+
+docker run -d <imagename>
+
+docker attach container
+
