@@ -1,0 +1,3 @@
+# docker container inspect --format "{{.Config.Image }} {{.NetworkSettings.IPAddress }}" 7746c4a92cb8 fc19857f6ad2
+postgres 172.17.0.5
+nginx 172.17.0.2

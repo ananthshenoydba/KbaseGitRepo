@@ -1,0 +1,59 @@
+Upgrading From 11GR1 To 11GR2, DBUA Fails With ORA-00942 on X$DIAG_ADR_CONTROL (Doc ID 1243837.1)
+
+Complete Checklist for Manual Upgrade to Oracle Database 11gR2 (11.2) (Doc ID 837570.1)
+
+============= PARAMETERS NEEDED TO BE CHANGED =============
+
+When you build the new 11.2.0.3 and before you start the duplicate command make sure the compatible parameter is set to 11.2.0.3.0 or whatever the source database is.
+
+before you run the upgrade to 11.2.0.4 make sure you run. 
+
+alter session set "_diag_adr_enabled"=true;
+
+ALTER SYSTEM SET SEC_CASE_SENSITIVE_LOGON = FALSE scope=both;
+
+/opt/oracle/app/oracle/cfgtoollogs/dbua/upgrade2020-09-16_10-01-55PM/TSTTRD01 --> logs.
+
+
+============== RMAN COMMANDS USEFUL ==============
+
+RUN
+{
+  ALLOCATE CHANNEL dev1 DEVICE TYPE DISK;
+  BACKUP AS COPY
+    INCREMENTAL LEVEL 0
+    DATABASE
+    FORMAT '+TSTTRD_DATA01'
+    TAG 'ORA_ASM_MIGRATION';
+}
+
+RESTORE SPFILE TO '+TSTTRD_DATA01';
+
+ALTER SYSTEM SET DB_CREATE_FILE_DEST='+TSTTRD_DATA01' SCOPE=BOTH;
+
+ALTER SYSTEM SET db_create_online_log_dest_1='+TSTTRD_REDO02' SCOPE=BOTH;
+
+ALTER SYSTEM SET db_create_online_log_dest_2='+TSTTRD_REDO1' SCOPE=BOTH;
+
+ALTER SYSTEM SET CONTROL_FILES='+TSTTRD_DATA01','+TSTTRD_REDO02' SCOPE=SPFILE SID='*';
+
+RESTORE CONTROLFILE FROM '/opt/contexts/tst-trads-data1/oradata/redologs/TSTTRD01/controlfile/o1_mf_hp19j97o_.ctl'
+
+SWITCH DATABASE TO COPY;
+RUN
+{
+  ALLOCATE CHANNEL dev1 DEVICE TYPE DISK;
+  RECOVER DATABASE;
+}
+
+ALTER DATABASE TEMPFILE '/opt/contexts/tst-trads-data1/oradata/datafiles/TSTTRD01/datafile/TSTTRD01/datafile/o1_mf_temp_hp1dngqn_.tmp' DROP;
+
+/opt/contexts/tst-trads-data1/oradata/datafiles/TSTTRD01/datafile/TSTTRD01/datafile/o1_mf_temp_hp1dngrg_.tmp
+/opt/contexts/tst-trads-data1/oradata/datafiles/TSTTRD01/datafile/TSTTRD01/datafile/o1_mf_temp_hp1dngqn_.tmp
+
+set pages 5000;
+set lines 500;
+set feedback off;
+set heading off;
+
+select segment_name,TABLESPACE_NAME ,segment_type, sum(bytes)/1024/1024/1024 size_gb from dba_segments where segment_name = 'TABLE' or segment_name in (select index_name from dba_indexes where table_owner='TFS') group by segment_name,TABLESPACE_NAME ,segment_type;

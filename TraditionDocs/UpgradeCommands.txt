@@ -1,0 +1,44 @@
+PROMPT Add temporary columns
+alter table trades_t add (xml_bin xmltype) xmltype xml_bin store as securefile binary xml;
+
+PROMPT Populate temporary columns
+update trades_t set xml_bin = xml;
+
+PROMPT Drop old column
+alter table trades_t drop column xml;
+
+PROMPT Rename temporary column
+alter table trades_t rename column xml_bin to xml;
+
+
+PROMPT Add temporary columns
+alter table trades_t add (xml_bin xmltype) xmltype xml_bin store as securefile binary xml;
+
+PROMPT Populate temporary columns
+update trades_t set xml_bin = xml;
+
+PROMPT Drop old column
+alter table trades_t drop column xml;
+
+PROMPT Rename temporary column
+alter table trades_t rename column fdo_xml_bis to fdo_xml;
+
+select TABLE_NAME, COLUMN_NAME, STORAGE_TYPE from dba_XML_TAB_COLS where owner='TFS' and table_name and storage_type!='BINARY';
+
+ALTER TABLE imp_xml_table MODIFY (c1 ) XMLTYPE c1 STORE AS SECUREFILE BINARY XML;
+
+select 'alter table ' || table_name || ' modify ('||column_name||') xmltype column'|| column_name||' store as securefile binary xml;' from dba_XML_TAB_COLS where owner='TFS' and storage_type!='BINARY';
+
+select 'alter table ' || table_name || ' add (' ||column_name||'_BINI xmltype) xmltype '|| column_name||'_BINI store as securefile binary xml;'  as command1 from dba_XML_TAB_COLS where owner='TFS' and storage_type!='BINARY';
+and table_name like 'PRICES_T';
+select 'alter table ' || table_name || ' disable all triggers;'  as command2 from dba_XML_TAB_COLS where owner='TFS' and storage_type!='BINARY';
+select 'update ' || table_name || ' set '|| column_name||'_BINI = '||column_name||'; commit;' as command3 from dba_XML_TAB_COLS where owner='TFS' and storage_type!='BINARY';
+select 'alter table ' || table_name || ' rename column '|| column_name||' to '|| column_name||'_CLOB;' as command4 from dba_XML_TAB_COLS where owner='TFS' and storage_type!='BINARY';
+select 'alter table ' || table_name || ' rename column '|| column_name||'_BINI to '|| column_name||';' as command5 from dba_XML_TAB_COLS where owner='TFS' and storage_type!='BINARY';
+select 'alter table ' || table_name || ' enable all triggers;'  as command6 from dba_XML_TAB_COLS where owner='TFS' and storage_type!='BINARY';
+select 'alter table ' || table_name || ' drop column '|| column_name||'_clob;' as command7 from dba_XML_TAB_COLS where owner='TFS' and storage_type!='BINARY';
+
+alter table PRICES_T add (XML_BINI xmltype) xmltype XML_BINI store as securefile binary xml;                                                                                                                                 
+alter table PRICES_T add (EVENTS_BINI xmltype) xmltype EVENTS_BINI store as securefile binary xml;                                                                                                                           
+alter table PRICES_T add (HIT_DATA_BINI xmltype) xmltype HIT_DATA_BINI store as securefile binary xml;                                                                                                                       
+alter table PRICES_TRADEACCEPT_EXCP_T add (DETAIL_BINI xmltype) xmltype DETAIL_BINI store as securefile binary xml;                                                                                                          

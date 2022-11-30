@@ -1,0 +1,7 @@
+dbcount=`ps -ef | grep ora_pmon_"${1}" | grep -v grep | wc -l` --> Correct with no spaces.
+
+dbcount =`ps -ef | grep ora_pmon_"${1}" | grep -v grep | wc -l` or dbcount= `ps -ef | grep ora_pmon_"${1}" | grep -v grep | wc -l` gives errors
+
+ps -eo pid,user,ppid,cmd,%mem,%cpu --sort=-%cpu | head | awk '{print $1}' | grep -v PID | xargs kill -9 --> reporting top 10 CPU consuming processes and kill them Be very carefull before running this command.
+
+while true; do ./testsql.sh; sleep 30; done

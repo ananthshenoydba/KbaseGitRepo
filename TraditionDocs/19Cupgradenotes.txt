@@ -1,0 +1,104 @@
+CREATE OR REPLACE DIRECTORY "/tmp" AS '/tmp';
+CREATE OR REPLACE DIRECTORY "/tfs" AS '/tfs';
+CREATE OR REPLACE DIRECTORY "SCRIPT_DIR" AS '/opt/oracle/scripts';
+CREATE OR REPLACE directory "AppLog" AS '/opt/oracle/applogs'
+
+sys@ORCLPDB1 as sysdba
+
+exec DBMS_REDEFINITION.start_redef_table('TFS', 'TRADES_T', 'TRADES_T_TMP');
+ 
+exec DBMS_REDEFINITION.SYNC_INTERIM_TABLE('TFS', 'TRADES_T', 'TRADES_T_TMP');
+ 
+exec DBMS_REDEFINITION.finish_redef_table('TFS', 'TRADES_T', 'TRADES_T_TMP');
+
+
+DIRECTORY=PDB_PUMP_DIR
+DUMPFILE=TFS_METADATA_ETD.dmp
+LOGFILE=TFS_METADATA_ETD.log
+transform=segment_attributes:n
+REMAP_TABLESPACE=TOOLS:USERS
+REMAP_TABLESPACE=AQ:USERS
+REMAP_TABLESPACE=DATA10M:USERS
+REMAP_TABLESPACE=DATA128K:USERS
+REMAP_TABLESPACE=DATA1M:USERS
+REMAP_TABLESPACE=INDX:USERS
+REMAP_TABLESPACE=INDX32K:USERS
+REMAP_TABLESPACE=SPLEX_DATA:USERS
+REMAP_TABLESPACE=SPLEX_IDX:USERS
+REMAP_TABLESPACE=INDX10M:USERS
+
+ts1v1f0c
+
+CREATE PROFILE "TFS"
+LIMIT
+COMPOSITE_LIMIT UNLIMITED
+SESSIONS_PER_USER UNLIMITED
+CPU_PER_SESSION UNLIMITED
+CPU_PER_CALL UNLIMITED
+LOGICAL_READS_PER_SESSION UNLIMITED
+LOGICAL_READS_PER_CALL UNLIMITED
+IDLE_TIME UNLIMITED
+CONNECT_TIME UNLIMITED
+PRIVATE_SGA UNLIMITED
+FAILED_LOGIN_ATTEMPTS 10
+PASSWORD_LIFE_TIME UNLIMITED
+PASSWORD_REUSE_TIME UNLIMITED
+PASSWORD_REUSE_MAX UNLIMITED
+PASSWORD_VERIFY_FUNCTION NULL
+PASSWORD_LOCK_TIME 86400/86400
+PASSWORD_GRACE_TIME 604800/86400 ;
+
+CREATE ROLE "BLOTTER_USER";
+GRANT "AQ_ADMINISTRATOR_ROLE" TO "BLOTTER_USER";
+GRANT "AQ_USER_ROLE" TO "BLOTTER_USER";
+GRANT "JAVAUSERPRIV" TO "BLOTTER_USER";
+GRANT "XDBADMIN" TO "BLOTTER_USER";
+GRANT CREATE JOB TO "BLOTTER_USER";
+
+
+set serveroutput on
+
+DECLARE
+callstr VARCHAR2(5000);
+BEGIN
+ dbms_job.user_export(20854, callstr);
+ dbms_output.put_line(callstr);
+END;
+/
+
+select log_user, schema_user, job,next_date,what,interval from dba_jobs where log_user='TFS';
+
+BEGIN
+DBMS_SCHEDULER.create_job ( 
+job_name => 'HouseKeepingManager',
+job_type => 'PLSQL_BLOCK',
+job_action => q'[HseKeep.Mgr('RUN')]',
+start_date => sysdate,
+repeat_interval => 'freq=minutely; bysecond=0',
+end_date => NULL,
+enabled => TRUE                               
+);
+End;
+/
+
+exec dbms_job.remove(20854);
+
+declare
+   l_job_exists number;
+begin
+   select count(*) into l_job_exists
+     from user_scheduler_jobs
+    where job_name = 'HouseKeepingManager'
+          ;
+
+   if l_job_exists = 1 then
+      dbms_scheduler.drop_job(job_name => 'HouseKeepingManager');
+   end if;
+end;
+
+BEGIN
+  dbms_scheduler.drop_job(job_name => 'HouseKeepingManager');
+END;
+/
+
+bCJS8urL

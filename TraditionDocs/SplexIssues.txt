@@ -1,0 +1,15 @@
+ISSUE
+
+desvr    2020-06-30 14:03:36.664006 3634 3555055360 [1] DEBUG (swapSource^swapTarget)=0
+desvr    2020-06-30 14:03:36.750687 3634 3555055360 [1] Number of rows on source=4513231, number on target=19694244
+desvr    2020-06-30 14:03:36.750724 3634 3555055360 [1] Table skipped because difference is greater than 20 percent or 1000000
+desvr    2020-06-30 14:03:36.753356 3634 3555055360 [1] Status: WaitMarker    Elapsed time: 3.277 seconds
+desvr    2020-06-30 14:03:36.754586 3634 3555055360 [1] Status : Skipped
+
+RESOLUTION
+
+set param SP_DEQ_COPY_CHECK_ROWS  2000000000
+
+Shareplex actually checks DBA_TABLES to check the number of rows rather before actually fetching the rows to compare and if the stats have not been collected recently and it feels the mismatch is huge it skips the job.
+
+reset param SP_DEQ_COPY_CHECK_ROWS 

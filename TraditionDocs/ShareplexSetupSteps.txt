@@ -1,0 +1,59 @@
+cd /opt/contexts/uat-eqd
+mkdir splex
+chown splex:splex splex/
+
+SharePlex creates a new VARDIR when installing the SP Agent.  Each instance of SP requires its own VARDIR. Therefore for each subsequent SP instance a copy of an unused VARDIR is placed in the VARDIR location for the new SP instance
+splex@ld8prdsrv-db01:~$ cd /opt/contexts/prd-agency/splex/
+splex@ld8prdsrv-db01:/opt/contexts/prd-agency/splex$ mv var_2102 var_nnnn
+splex@ld8prdsrv-db01:/opt/contexts/prd-agency/splex$ tar cf var_nnnn_20181012.tar var_nnnn
+splex@ld8prdsrv-db01:/opt/contexts/prd-agency/splex$ mv var_nnnn var_2102
+
+On Source database as splex:
+Now become splex on the source so we can setup capture.
+As splex:
+cd ~/env
+choose a new port (not needed for firewall yet) – see shareplex manager for a free one
+copy pre-existing env
+cp PRDTRD01_splex_2128.env PRDTRD01_splex_2138.env
+change the ports and possibly SP_SYS_PRODDIR for new version of splex e.g. export SP_SYS_PRODDIR=/opt/splex/app/splex_9.1
+now make file u+x
+and set the env
+. PRDTRD01_splex_2138.env
+
+cdspbin
+now run ora_setup
+./ora_setup
+Follow instructions in S:\QuestTools\SharePlex\9.1.3\Shareplex_Install_version_9.3.docx
+
+Note: the empty folder structure for SP_SYS_VARDIR=/opt/contexts/prd-trads/splex/var_2138 you may need to get this from another server.  In prd-trads we did this to get a copy: tar -cf var_2138_empty_9.1.tar var_2138
+
+Now go to: cd /opt/contexts/prd-trads/splex
+And copy an existing var_????/config/ PRDTRD01_config_20180928_01 to the new var_???? folder
+vi new config file and check contents.  Especially the destination:  Last parameter, we changed to: ld8prdsrv-db02@o.PRDTRD11
+
+In folder: cd /opt/contexts/prd-trads/splex/admin
+the actual env files should exist.  If actual file is in ~/env file then move actual file to /opt/contexts/prd-trads/splex/admin and create a symbolic link.  Now in admin folder:
+cp PRDTRD01_splex_2138.env PRDTRD01_splex_start_2138.sh
+i.e. create the start script.  vi this script and uncomment the last line (./sp_cop -u${SP_COP_TPORT}_${ORACLE_SID} &)
+
+cd ~/start
+ln –s /opt/contexts/prd-trads/splex/admin/PRDTRD01_splex_start_2138.sh
+to create a link to the start file.
+These files are used by ~/scripts/start* and shut*
+
+Now start sp_cop by
+cd ~/start
+./PRDTRD01_splex_start_2138.sh
+Hit enter
+cop
+shows you the sp_cop instances running.
+Now cdspbin
+./sp_ctrl
+status (cop and cmd&ctrl should be running)
+list config (should show two configs – both inactive)
+verify config PRDTRD01_config_20181001_01
+activate config PRDTRD01_config_20181001_01 nolock
+(only use the “nolock” option for this type as we are now about to export/copy the database).
+Also:
+stop export
+so it does not continue to ping the unavailable destination.

@@ -1,0 +1,16 @@
+===== CREATING and ATTACHING VOLUME WINDOWS ====
+We cannot create and attach volumes on windows as it fails with a permission error. So we just create a volume with docker 
+
+using 
+
+docker volume create --name utcdata -d local
+
+http://www.lukaszewczak.com/2016/09/run-postgresql-using-docker-with.html
+
+docker run -p 25432:5432 --name pgdevddb -d --volume utcdata:/var/lib/postgresql/data postgres:11.6
+
+
+
+need to try
+
+docker run -p 5432:5432 -it -v /c/Users/me/Desktop/pg/data:/var/lib/postgresql/data postgres:latest -e POSTGRES_USER=user POSTGRES_PASSWORD=password
