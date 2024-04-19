@@ -37,3 +37,52 @@ docker run -d <imagename>
 
 docker attach container
 
+
+=================
+
+
+docker run -i -t 8dbd9e392a96 /bin/bash --> run an image as a container and attach to it.
+
+Run 'docker buildx build --tag=exercise-4 .' to build the `Docker` image after changing to the directory which has the docket-compose.yml file and Dockerfile file
+
+A Dockerfile is a plaintext blueprint encompassing all the directives for constructing a Docker image. This image serves as the foundation for running code within a Docker container. When a user initiates the Docker run command with a specified application, like WordPress, Docker harnesses the Dockerfile's instructions to assemble the image, ensuring seamless container execution. Moreover, it can be version-controlled, ensuring historical tracking and facilitating collaboration among teams. Its customisation features allow building processes, offering flexibility and control to meet specific requirements.
+
+Dockerfile primarily focuses on building Docker images through a sequence of script commands, often referred to as instructions. Each instruction contributes to the creation of image layers, automating the image generation process and eliminating the need for manual command execution.
+Furthermore, Dockerfile ensures the consistency of Docker images, regardless of the environment. This uniformity eliminates discrepancies between development, testing, and production setups. Dockerfile also doubles as a form of documentation, offering insight into the construction of a Docker image, which proves invaluable for debugging and collaborative efforts.
+
+Dockerfile serves as the ideal solution when the task at hand is building Docker images from the ground up. It offers a meticulously crafted script of commands, effectively acting as a blueprint for image creation. Automation is one of its primary strengths, streamlining the build process. This automation is especially valuable in the realm of Continuous Integration and Continuous Delivery(CI/CD) pipelines, where efficiency is paramount. By reducing the need for manual command execution, Dockerfile not only saves valuable time but also minimises the potential for human errors.
+
+example Docker file, this file has been used on windows and it uses WSL and creates a Linux container and installs python, and creates a workdir and copies contents of the current directory to app and then installs everything required for the python to run which is specified in the requirements.txt.
+
+FROM python:latest
+
+WORKDIR app
+COPY . /app
+
+RUN python3 -m pip install -r requirements.txt
+
+===============
+
+Docker Compose, on the other hand, is designed to define and orchestrate multi-container applications, facilitating complex application setups. It uses YAML files for defining services and networks, making configurations more straightforward and human-readable.Further, Docker Compose supports the scaling of services both horizontally and vertically, meeting the demand for more robust applications. Additionally, it enables the replication of the same environment across different stages of the application lifecycle (development, testing, staging, and production).
+
+Docker Compose comes into its own when you're tasked with managing applications that encompass a multitude of interconnected containers. It simplifies the complex orchestration of such applications by enabling you to define and manage them with ease. Docker Compose provides a framework for defining intricate networks, facilitating seamless communication between various services within multi-container applications.
+
+example docker compose file.
+
+version: "3.9"
+services:
+  test:
+    image: "exercise-4"
+    volumes:
+      - .:/app
+    command: python3 -m pytest
+  run:
+    image: "exercise-4"
+    volumes:
+      - .:/app
+    command: python3 main.py
+
+===========
+
+
+
