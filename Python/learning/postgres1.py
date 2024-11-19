@@ -8,6 +8,7 @@ def execute_sql_file(cursor, file_path):
         sql = file.read()
         cursor.execute(sql)
 
+#function to convert sql file to csv file
 def convert_sqlfilename_to_csv(file_name):
     if file_name.endswith(".sql"):
         #csv_file_name = file_name.rstrip(".sql") + ".csv"
