@@ -1,0 +1,43 @@
+RAW OCR OUTPUT:
+================================================================================
+ale
+Ingredients: Aqua, Ammonium Lawl Sulfate, Decy!
+Glucoside, Lauryl Glucoside, Cocami propyl Betaine,
+e Dimethicone (and) Amodimethicone (and) Laureth-23
+2 (and) Polyquaternium-10 (and) Laureth-4, Glycol Distearate,
+4 Acrvates Copolymer, Polenta Fragrance, PEG 150
+2 Distearate, Citric Acid, Polyquaternium-10, Potassium
+3  Sotbate, Sodium Benzoate, Givcerin, Disodium EDTA,
+i Haltooligosy Glucoside & Hydrogenated. Starch
+2 \VAtolsate, PEG-45M, Methylchloroisothiazolinone &
+3 nttylsothiazolinone, Sodium hon, BHT, Cicer
+‘ Net Seed Extract, Terminalia Bellerica Fruit Extract.
+al EXTERNAL USE ONLY, Store in a cool and dry
+tone: Clinically proven for effectiveness.
+10" Mig, Lic. No, M.R.PRs. Incl. of all taxes, Batch No. &
+
+
+CORRECTED OUTPUT:
+================================================================================
+Ingredients: Aqua, Ammonium Lauryl Sulfate, Decyl Glucoside, Lauryl Glucoside, Cocamidopropyl Betaine, Dimethicone (and) Amodimethicone (and) Laureth-23 (and) Polyquaternium-10 (and) Laureth-4, Glycol Distearate, Acrylates Copolymer, Polyquaternium-7, Fragrance, PEG-150 Distearate, Citric Acid, Polyquaternium-10, Potassium Sorbate, Sodium Benzoate, Glycerin, Disodium EDTA, Maltooligosyl Glucoside & Hydrogenated Starch 2 Hydrolysate, PEG-45M, Methylchloroisothiazolinone & Methylisothiazolinone, Sodium Hydroxide, BHT, Cicer Arietinum Seed Extract, Terminalia Bellerica Fruit Extract
+
+STATISTICS:
+================================================================================
+Total ingredients: 24
+Matched: 23 (95.8%)
+Processing time: 0.027s
+
+
+CORRECTIONS:
+================================================================================
+Ammonium Lawl Sulfate               → Ammonium Lauryl Sulfate             (1.000)
+Decy Glucoside                      → Decyl Glucoside                     (1.000)
+Cocami propyl Betaine               → Cocamidopropyl Betaine              (0.978)
+Acrvates Copolymer                  → Acrylates Copolymer                 (0.919)
+Polenta                             → Polyquaternium-7                    (0.933)
+PEG 150 2 Distearate                → PEG-150 Distearate                  (0.895)
+Potassium 3 Sotbate                 → Potassium Sorbate                   (0.944)
+Givcerin                            → Glycerin                            (1.000)
+Sodium hon                          → Sodium Hydroxide                    (1.000)
+Cicer Net Seed Extract              → Cicer Arietinum Seed Extract        (0.840)
+Terminalia Bellerica Fruit Extract al EXTERNAL USE ONLY → Terminalia Bellerica Fruit Extract  (0.764)

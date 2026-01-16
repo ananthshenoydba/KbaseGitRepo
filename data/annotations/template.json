@@ -1,0 +1,26 @@
+{
+  "annotations": [
+    {
+      "id": "img_001",
+      "filename": "shampoo_label_001.jpg",
+      "product_type": "shampoo",
+      "brand": "",
+      "ground_truth_text": "",
+      "notes": "",
+      "timestamp": "",
+      "annotated_by": ""
+    }
+  ],
+  "metadata": {
+    "version": "1.0",
+    "description": "Ground truth annotations for cosmetic ingredient labels",
+    "total_images": 0,
+    "annotation_guidelines": {
+      "text_format": "Copy the text exactly as it appears, preserving capitalization and punctuation",
+      "ingredient_separator": "Use commas as shown on label",
+      "abbreviations": "Keep abbreviations as-is (e.g., CI 77891, PPG-10)",
+      "special_characters": "Preserve all special characters",
+      "quality_check": "Verify spelling of chemical names against INCI database if unsure"
+    }
+  }
+}
